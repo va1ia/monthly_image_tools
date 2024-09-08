@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="style_image.css"> 
+    <script src="image.js"></script>
+    <script src="canvasScript_image.js"></script>
+    <title>My Monthly Image Processor</title>
+    <link rel="icon" href="circle_logo.png">
+    <link href="graphik.woff" rel="stylesheet">
+</head>
+
+<body>
+    <div id="bggrid"></div>
+    <div class="operation">
+        <div class="squares">
+            <div id="blush" class="square" selected></div>
+            <div id="blue" class="square"></div>
+            <div id="linen" class="square"></div>
+            <div id="dawn" class="square"></div>
+            <div id="pink" class="square"></div>
+            <div id="picnic" class="square"></div>
+        </div>
+        <div class="canvas-container">
+            <canvas id="canvas" width="1800" height="1800"></canvas>
+        </div>
+    </div>
+
+    <div class="operation controls">
+        <div class="gridHolder">
+            <div class="item1">
+                <button id="upload">Upload</button><br>
+            </div>
+            <div class="item2">
+                <label for="textColorSelect">Color Mode:</label>
+                <select id="textColorSelect">
+                    <option value="#F5F5ED">Morning Fog</option>
+                    <option value="#3d8054">Picnic Date</option>
+                </select>
+                <br>
+                Frame
+                <input type="checkbox" id="frameCheckbox" checked>             
+            </div>
+            <div class="item3">
+                <button id="download">Download</button>
+            </div>  
+            <div class="item4">
+                <div class="text-container">
+                    <textarea id="userText" placeholder="tag text here..." maxlength="140"></textarea>
+                </div>                
+            </div>
+            
+            
+        </div>
+    </div>
+    <div id="message">
+        &nbsp♥ here's a tool made by Valia for yall all ♥&nbsp
+    </div>
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const squares = document.querySelectorAll('.square');
+
+    squares.forEach(square => {
+        square.addEventListener('click', () => {
+            // 移除所有 square 的 selected 类
+            squares.forEach(s => {
+                s.classList.remove('selected');
+                s.style.boxShadow = '';
+            });
+
+            // 为点击的 square 添加 selected 类
+            square.classList.add('selected');
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const squares = document.querySelectorAll('.square');
+    let currentLogoUrl = 'logo.png'; // Default logo URL
+
+    squares.forEach(square => {
+        square.addEventListener('click', () => {
+            // Remove logo from all square divs
+            squares.forEach(s => {
+                s.innerHTML = '';
+            });
+
+            // Determine logo URL based on square id
+            const id = square.id;
+            currentLogoUrl = (id === 'picnic' || id === 'pink' || id === 'dawn') ? 'logo2.png' : 'logo.png';
+
+            // Add logo image to the clicked square div
+            const logo = document.createElement('img');
+            logo.src = currentLogoUrl;
+            logo.alt = 'logo';
+            logo.style.width = '50%';
+            logo.style.height = 'auto';
+            logo.style.position = 'absolute';
+            logo.style.top = '50%';
+            logo.style.left = '50%';
+            logo.style.transform = 'translate(-50%, -50%)';
+            square.appendChild(logo);
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.getElementById('widthSlider');
+
+    function updateSliderBackground() {
+        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.setProperty('--value', `${value}%`);
+        // Add your image recognition code here
+        recognizeImage();
+    }
+
+    slider.addEventListener('input', updateSliderBackground);
+    updateSliderBackground();
+});
+
+function recognizeImage() {
+    // Add your image recognition logic here
+    // This function will be called every time the slider value changes
+    // You can update the canvas or perform any image processing tasks here
+}
+
+// Function to check screen size and update button content
+function updateButtonContent() {
+    const uploadButton = document.getElementById('upload');
+
+    // Check if the screen width is less than or equal to 700px
+    if (window.innerWidth <= 700) {
+        uploadButton.innerHTML = ''; // Remove text content
+        uploadButton.style.backgroundColor = 'transparent'; // Remove background color
+        uploadButton.style.border = 'none'; // Remove border
+        uploadButton.style.width = '32px'; // Set width to 32px
+        uploadButton.style.height = '32px'; // Set height to 32px
+        uploadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0ZM93.66,77.66,120,51.31V144a8,8,0,0,0,16,0V51.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,77.66Z"></path></svg>\')'; // Set background image
+    } else {
+        // Restore default button content and styles if screen size is larger than 700px
+        uploadButton.innerHTML = 'Upload';
+        uploadButton.style.backgroundColor = '';
+        uploadButton.style.border = '';
+        uploadButton.style.width = '';
+        uploadButton.style.height = '';
+        uploadButton.style.backgroundImage = '';
+    }
+}
+
+// Call the function initially and add event listener for window resize
+updateButtonContent();
+window.addEventListener('resize', updateButtonContent);
+
+// Function to update download button content and style based on screen size
+function updateDownloadButton() {
+    const downloadButton = document.getElementById('download');
+
+    // Check if the screen width is less than or equal to 700px
+    if (window.innerWidth <= 700) {
+        downloadButton.innerHTML = ''; // Remove text content
+        downloadButton.style.backgroundColor = 'transparent'; // Remove background color
+        downloadButton.style.border = 'none'; // Remove border
+        downloadButton.style.width = '32px'; // Set width to 32px
+        downloadButton.style.height = '32px'; // Set height to 32px
+        downloadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path></svg>\')'; // Set background image
+    } else {
+        // Restore default button content and styles if screen size is larger than 700px
+        downloadButton.innerHTML = 'Download';
+        downloadButton.style.backgroundColor = '';
+        downloadButton.style.border = '';
+        downloadButton.style.width = '';
+        downloadButton.style.height = '';
+        downloadButton.style.backgroundImage = '';
+    }
+}
+
+// Call the function initially and add event listener for window resize
+updateDownloadButton();
+window.addEventListener('resize', updateDownloadButton);
+
+</script>
+
+</html>

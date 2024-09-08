@@ -1,0 +1,421 @@
+:root {
+    --picnic: #3d8054;
+    --blush: #f9ddd7;
+    --linen: #e5e9d9;
+    --morning: #f5f5ed;
+    --blue: #C6DFF1;
+    --purple: #779AD0;
+    --dawn: #282828;
+}
+
+@font-face {
+    font-family: 'Graphik';
+    font-weight: 500;
+    src: url('graphik.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Graphik';
+    font-weight: 200;
+    src: url('graphik-light.woff') format('woff');
+}
+
+#bggrid {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    background-image: url('1.svg');
+    opacity: 0.45;
+    background-size: 57%;
+}
+
+body {
+    font-family: 'Graphik', Arial, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background-color: var(--picnic);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1 {
+    color: var(--morning);
+    text-align: center;
+    font-weight: normal;
+}
+
+.button {
+    background-color: #eea494;
+    color: var(--dawn);
+    padding: 8px 20px;
+    border-radius: 12px;
+    border: 1.5px solid var(--dawn);
+    margin-bottom: 12px;
+}
+
+.operation {
+    width: 90%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    background-color: var(--morning);
+    border-radius: 10px;
+    border: 1.5px solid var(--dawn);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.squares {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-template-rows: repeat(3, 120px);
+    gap: 0;
+}
+
+.square {
+    width: 120px;
+    height: 120px;
+    background-color: var(--default-color);
+    position: relative;
+}
+
+.selected {
+    box-shadow: 0 0 0 3px var(--picnic) inset;
+}
+
+.selected#picnic, .selected#purple {
+    box-shadow: 0 0 0 3px var(--linen) inset;
+}
+
+
+#picnic:hover, #purple:hover {
+    box-shadow: 0 0 0 3px var(--linen) inset;
+}
+
+#morning:hover, #linen:hover, #blush:hover, #blue:hover {
+    box-shadow: 0 0 0 3px var(--picnic) inset;
+}
+
+#morning { background-color: var(--morning); }
+#linen { background-color: var(--linen); }
+#picnic { background-color: var(--picnic); }
+#blush { background-color: var(--blush); }
+#blue { background-color: var(--blue); }
+#purple { background-color: var(--purple); }
+
+.canvas-container {
+    width: 100%;
+    height: 360px;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+}
+
+.controls {
+    display: grid;
+    gap: 10px;
+    background-color: var(--linen);
+}
+
+.block {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.block.short {
+    flex: 1;
+}
+
+.block.long {
+    flex: 2;
+}
+
+#core {
+    width: 90%;
+    max-width: 600px;
+    height: 450px;
+}
+
+#colorh {
+    display: inline-flexbox;
+    width: fit-content;
+    height: 100%;
+    overflow: scroll;
+}
+
+#output {
+    display: inline-block;
+    width: 1080px;
+    height: 1080px;
+    transform-origin: top left;
+    transform: scale(0.2);
+    background-color: red;
+}
+
+.color {
+    width: 125px;
+    height: 125px;
+    background-color: var(--blush);
+}
+
+button {
+    font-family: "graphik";
+    font-size: 14px;
+    width: 120px;
+    background-color: #eea494;
+    border-radius: 16px;
+    padding: 6px;
+    cursor: pointer;
+    border: 1px solid #282828;
+    font-weight: 200;
+}
+
+button:hover {
+    background-color: #e5e9d9;
+}
+
+#message {
+    background-color: #282828;
+    color:var(--morning);
+    position: fixed;
+    font-size: 12px;
+    bottom: 0;
+    left: 0;
+    font-weight: 200;
+}
+
+.gridHolder {
+    padding: 20px 28px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px 36px;
+}
+
+/* General input style */
+input[type='range'] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background-color: #d9d9d9;
+    border-radius: 3px;
+    outline: none;
+}
+
+/* Track Styling */
+input[type='range']::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: linear-gradient(to right, #282828 0%, #282828 var(--value), #d9d9d9 var(--value), #d9d9d9 100%);
+    border-radius: 3px;
+    border: 0;
+}
+
+input[type='range']::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #d9d9d9;
+    border-radius: 3px;
+    border: 0;
+}
+
+input[type='range']::-ms-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: transparent; /* Needed to hide track background */
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type='range']::-ms-fill-lower {
+    background: #282828;
+    border-radius: 3px;
+}
+
+input[type='range']::-ms-fill-upper {
+    background: #d9d9d9;
+    border-radius: 3px;
+}
+
+/* Thumb Styling */
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #333;
+    cursor: pointer;
+    margin-top: -4px; /* Align the thumb vertically with the track */
+}
+
+input[type='range']::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #333;
+    cursor: pointer;
+}
+
+input[type='range']::-ms-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #333;
+    cursor: pointer;
+    margin-top: 0; /* Align the thumb vertically with the track */
+}
+
+/* For WebKit Browsers: Update the background gradient */
+input[type='range'] {
+    background: linear-gradient(to right, #282828 0%, #282828 50%, #d9d9d9 50%, #d9d9d9 100%);
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, #282828 0%, #282828 var(--value), #d9d9d9 var(--value), #d9d9d9 100%);
+}
+
+#userText {
+    font-family: "graphik";
+    width: 100%;
+    border: #282828 1px solid;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    height: 90px; /* Adjust this value to set the height to 3 lines */
+    resize: none; /* Prevents the user from resizing the textarea */
+    box-sizing: border-box; /* Ensures padding is included in the height */
+    overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+#userText::placeholder {
+    color: #bfbfbf;
+}
+
+#charCount {
+    font-weight: 200;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.square img {
+    width: 69px;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Hidden by default, shown when selected */
+}
+
+.square.selected img {
+    display: block;
+}
+
+@media screen and (max-width: 700px){
+    #bggrid {
+        background-size: 124%;
+    }
+
+    .operation {
+        width: 48vw;
+        display: block;
+    }
+
+    .squares {
+        width: 48vw;
+        grid-template-columns: repeat(3, 16vw);
+        grid-template-rows: repeat(2, 16vw);
+    }
+
+    .square {
+        width: 16vw;
+        height: 16vw;
+    }
+
+    .canvas-container {
+        width: 48vw;
+        height: 48vw;
+        display: block;
+    }
+
+    .gridHolder {
+        padding: 20px 28px;
+        display: grid;
+        grid-template-columns: 1fr 7fr;
+        gap: 20px 32px;
+    }
+
+    #message {
+        font-size: 10.8px;
+    }
+}
+
+@media screen and (max-width: 520px){
+    #bggrid {
+        background-size: 150%;
+    }
+
+    .operation {
+        width: 60vw;
+    }
+
+    .squares {
+        width: 60vw;
+        grid-template-columns: repeat(3, 20vw);
+        grid-template-rows: repeat(2, 20vw);
+    }
+
+    .square {
+        width: 20vw;
+        height: 20vw;
+    }
+
+    .canvas-container {
+        width: 60vw;
+        height: 60vw;
+    }
+}
+
+@media screen and (max-width: 420px){
+    #bggrid {
+        background-size: 180%;
+    }
+
+    .operation {
+        width: 78vw;
+    }
+
+    .squares {
+        width: 78vw;
+        grid-template-columns: repeat(3, 26vw);
+        grid-template-rows: repeat(2, 26vw);
+    }
+
+    .square {
+        width: 26vw;
+        height: 26vw;
+    }
+
+    .canvas-container {
+        width: 78vw;
+        height: 78vw;
+    }
+}
