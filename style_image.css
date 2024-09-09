@@ -272,6 +272,22 @@ input[type='range']::-webkit-slider-runnable-track {
     background: linear-gradient(to right, #282828 0%, #282828 var(--value), #d9d9d9 var(--value), #d9d9d9 100%);
 }
 
+/* Container for the slider and line */
+.slider-container {
+    position: relative;
+    width: 100%;
+}
+
+.slider-line {
+    position: absolute;
+    top: 21px; /* Adjust to center the line vertically */
+    left: 50.1%; /* Center horizontally */
+    width: 3px;
+    height: 20px;
+    background-color: var(--picnic); /* Or replace with #FF5E6C for blush pink */
+    z-index: 2; /* Above the slider track but below the thumb */
+}
+
 #userText {
     font-family: "graphik";
     width: 100%;
