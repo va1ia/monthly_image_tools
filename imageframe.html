@@ -43,7 +43,23 @@
                 </select>
                 <br>
                 Frame
-                <input type="checkbox" id="frameCheckbox" checked>             
+                <input type="checkbox" id="frameCheckbox" checked>   
+                
+                <label for="bigTextCheckbox">Big Text</label>
+            <input type="checkbox" id="bigTextCheckbox" />
+
+            <!-- Add sliders for text adjustments (initially hidden) -->
+            <div id="bigTextSliders" style="display: none;">
+                <label for="textSizeSlider">Text Size</label>
+                <input type="range" id="textSizeSlider" min="90" max="400" value="240">
+                
+                <label for="textXPositionSlider">X Position</label>
+                <input type="range" id="textXPositionSlider" min="0" max="1800" value="900">
+                
+                <label for="textYPositionSlider">Y Position</label>
+                <input type="range" id="textYPositionSlider" min="240" max="2000" value="1800">
+            </div>
+
             </div>
             <div class="item3">
                 <button id="download">Download</button>
