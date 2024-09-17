@@ -334,6 +334,13 @@ input[type='range']::-webkit-slider-runnable-track {
         background-size: 124%;
     }
 
+    body {
+        padding-top: 6%;
+        padding-bottom: 6%;
+        height: auto;
+        overflow: auto;
+    }
+
     .operation {
         width: 48vw;
         display: block;
@@ -397,6 +404,10 @@ input[type='range']::-webkit-slider-runnable-track {
 @media screen and (max-width: 420px){
     #bggrid {
         background-size: 180%;
+    }
+
+    body {
+        padding-top: 8%;
     }
 
     .operation {
