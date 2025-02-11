@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let img = new Image();
     let secondImg = new Image();
-    secondImg.src = 'meme.png';
+    secondImg.src = '../meme.png';
     let userImg = new Image();
     let userImgLoaded = false;
     let currentText = 'tag text here...';
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentBackgroundColor = getComputedStyle(squares[0]).backgroundColor;
     let currentTextColor = '#F5F5ED'; // Default color
-    let currentLogoUrl = 'logo2.png'; // Default logo
+    let currentLogoUrl = '../logo2.png'; // Default logo
     let showFrame = true; // Default to showing frame
 
     // Big text settings
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load custom font for big text
-    const bigTextFont = new FontFace('GTEesti', 'url(GTEesti.woff2)');
+    const bigTextFont = new FontFace('GTEesti', 'url(../GTEesti.woff2)');
     bigTextFont.load().then((font) => {
         document.fonts.add(font);
         console.log("Font loaded successfully!");
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Draw regular text and logo if the checkbox is unchecked
             drawText();
-            const pos = (currentLogoUrl === 'logo.png') ? logoPositions.logo1 : logoPositions.logo2;
+            const pos = (currentLogoUrl === '../logo.png') ? logoPositions.logo1 : logoPositions.logo2;
             const logoY = showFrame ? pos.y : pos.y - 70; // Move logo up if the frame is not shown
             ctx.drawImage(img, pos.x, logoY, pos.width, pos.height);
         }
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Color picker handler
     document.getElementById('textColorSelect').addEventListener('change', (e) => {
         currentTextColor = e.target.value;
-        currentLogoUrl = (currentTextColor === '#3d8054') ? 'logo.png' : 'logo2.png';
+        currentLogoUrl = (currentTextColor === '#3d8054') ? '../logo.png' : '../logo2.png';
         img.src = currentLogoUrl;
         img.onload = drawCanvas;
     });

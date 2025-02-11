@@ -6,23 +6,24 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="style.css"> 
-    <script src="meme.js"></script>
-    <script src="canvasScript.js"></script>
-    <title>My Monthly Meme Generator</title>
-    <link rel="icon" href="circle_logo.png">
+    <link rel="stylesheet" type="text/css" href="style_image.css"> 
+    <script src="image.js"></script>
+    <script src="canvasScript_image.js"></script>
+    <title>My Monthly Image Processor</title>
+    <link rel="icon" href="../circle_logo.png">
     <link href="graphik.woff" rel="stylesheet">
 </head>
 
 <body>
+    <a href="../index.html" class="button" style="padding: 8px 14px; border-radius: 50%; font-size: 20px; position: absolute; top: 20px; left: 24px;"><</a>
     <div id="bggrid"></div>
     <div class="operation">
         <div class="squares">
-            <div id="blush" class="square"></div>
-            <div id="morning" class="square"></div>
+            <div id="blush" class="square" selected></div>
             <div id="blue" class="square"></div>
             <div id="linen" class="square"></div>
-            <div id="purple" class="square"></div>
+            <div id="dawn" class="square"></div>
+            <div id="pink" class="square"></div>
             <div id="picnic" class="square"></div>
         </div>
         <div class="canvas-container">
@@ -36,22 +37,43 @@
                 <button id="upload">Upload</button><br>
             </div>
             <div class="item2">
+                <label for="textColorSelect">Color Mode:</label>
+                <select id="textColorSelect">
+                    <option value="#F5F5ED">Morning Fog</option>
+                    <option value="#3d8054">Picnic Date</option>
+                </select>
+                <br>
+                Frame
+                <input type="checkbox" id="frameCheckbox" checked>   
+                
+                <label for="bigTextCheckbox">Big Text</label>
+            <input type="checkbox" id="bigTextCheckbox" />
+
+            <!-- Add sliders for text adjustments (initially hidden) -->
+            <div id="bigTextSliders" style="display: none;">
+                <label for="textSizeSlider">Text Size</label>
+                <input type="range" id="textSizeSlider" min="90" max="400" value="240">
+                
                 <div class="slider-container">
-                    <label for="widthSlider" style="font-weight: 200; font-size: 14px;">Picture Width</label><br>
-                    <input id="widthSlider" type="range" min="720" max="1450">
-                </div>
+                    <label for="textXPositionSlider">X Position</label>
+                    <input type="range" id="textXPositionSlider" min="0" max="1800" value="900">
+                    <div class="slider-line"></div>
+                </div>                
+                
+                <label for="textYPositionSlider">Y Position</label>
+                <input type="range" id="textYPositionSlider" min="240" max="2000" value="1800">
+            </div>
+
             </div>
             <div class="item3">
                 <button id="download">Download</button>
             </div>  
             <div class="item4">
                 <div class="text-container">
-                    <textarea id="userText" placeholder="type your text here..." maxlength="140"></textarea>
-                    <div id="charCount">Characters: 0</div> <!-- To display character count -->
+                    <textarea id="userText" placeholder="tag text here..." maxlength="140"></textarea>
                 </div>                
             </div>
-            
-            
+
         </div>
     </div>
     <div id="message">
@@ -79,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const squares = document.querySelectorAll('.square');
-    let currentLogoUrl = 'logo.png'; // Default logo URL
+    let currentLogoUrl = '../logo.png'; // Default logo URL
 
     squares.forEach(square => {
         square.addEventListener('click', () => {
@@ -90,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Determine logo URL based on square id
             const id = square.id;
-            currentLogoUrl = (id === 'picnic' || id === 'purple') ? 'logo2.png' : 'logo.png';
+            currentLogoUrl = (id === 'picnic' || id === 'pink' || id === 'dawn') ? '../logo2.png' : '../logo.png';
 
             // Add logo image to the clicked square div
             const logo = document.createElement('img');
