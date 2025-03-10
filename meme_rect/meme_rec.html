@@ -7,27 +7,27 @@
     <meta name="viewport" content="width=device-width">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../style.css"> 
-    <script src="meme.js"></script>
-    <script src="canvasScript.js"></script>
+    <script src="meme_rec.js"></script>
+    <script src="canvasScript_memerec.js"></script>
     <title>My Monthly Meme Generator</title>
-    <link rel="icon" href="circle_logo.png">
-    <link href="graphik.woff" rel="stylesheet">
+    <link rel="icon" href="../circle_logo.png">
+    <link href="../graphik.woff" rel="stylesheet">
 </head>
 
 <body>
-    <a href="../index.html" class="button" style="padding: 8px 14px; border-radius: 50%; font-size: 20px; position: absolute; top: 20px; left: 24px;"><</a>
+    <a href="../index.html" class="button" style="padding: 8px 14px; border-radius: 50%; font-size: 20px; position: absolute; top: 20px; left: 24px;"></a>
     <div id="bggrid"></div>
     <div class="operation">
-        <div class="squares">
-            <div id="blush" class="square"></div>
-            <div id="morning" class="square"></div>
-            <div id="blue" class="square"></div>
-            <div id="linen" class="square"></div>
-            <div id="purple" class="square"></div>
-            <div id="picnic" class="square"></div>
+        <div class="squares2">
+            <div id="blush" class="square2"></div>
+            <div id="morning" class="square2"></div>
+            <div id="blue" class="square2"></div>
+            <div id="linen" class="square2"></div>
+            <div id="purple" class="square2"></div>
+            <div id="picnic" class="square2"></div>
         </div>
-        <div class="canvas-container">
-            <canvas id="canvas" width="1800" height="1800"></canvas>
+        <div class="canvas-container2">
+            <canvas id="canvas" width="1800" height="2400"></canvas>
         </div>
     </div>
 
@@ -56,13 +56,13 @@
         </div>
     </div>
     <div id="message">
-        &nbsp♥ here's a tool made by Valia for yall all ♥&nbsp
+        &nbsp♥ here's a tool made by Valia for yall ♥&nbsp
     </div>
 </body>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const squares = document.querySelectorAll('.square');
+    const squares = document.querySelectorAll('.square2');
 
     squares.forEach(square => {
         square.addEventListener('click', () => {
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const squares = document.querySelectorAll('.square');
-    let currentLogoUrl = 'logo.png'; // Default logo URL
+    const squares = document.querySelectorAll('.square2');
+    let currentLogoUrl = '../logo.png'; // Default logo URL
 
     squares.forEach(square => {
         square.addEventListener('click', () => {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Determine logo URL based on square id
             const id = square.id;
-            currentLogoUrl = (id === 'picnic' || id === 'purple') ? 'logo2.png' : 'logo.png';
+            currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
 
             // Add logo image to the clicked square div
             const logo = document.createElement('img');

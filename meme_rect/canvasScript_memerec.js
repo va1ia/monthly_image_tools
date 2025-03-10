@@ -1,24 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const squares = document.querySelectorAll('.square');
+    const squares = document.querySelectorAll('.square2');
 
     // Custom defines
     let img = new Image();
     let secondImg = new Image();
-    secondImg.src = 'meme.png';
-    let currentText = 'type your text here...';
+    secondImg.src = '../meme.png';
+    let currentText = 'type your text here... minimum 2 lines plz';
     let userImg = new Image();
     let userImgLoaded = false;
 
     // Canvas logo display
     const logoPositions = {
-        logo1: { x: 730, y: 130, width: 344.4, height: 107.5 },
-        logo2: { x: 730, y: 130, width: 344.4, height: 107.5 }
+        logo1: { x: 649.6, y: 130, width: 495.1, height: 106.7 },
+        logo2: { x: 649.6, y: 130, width: 495.1, height: 106.7 }
     };
 
     let currentBackgroundColor = getComputedStyle(squares[0]).backgroundColor;
-    let currentLogoUrl = 'logo.png';
+    let currentLogoUrl = '../logo.png';
 
     function drawCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw the logo image
         img.src = currentLogoUrl;
         img.onload = () => {
-            const pos = (currentLogoUrl === 'logo.png') ? logoPositions.logo1 : logoPositions.logo2;
+            const pos = (currentLogoUrl === '../logo.png') ? logoPositions.logo1 : logoPositions.logo2;
             ctx.drawImage(img, pos.x, pos.y, pos.width, pos.height);
 
             // Draw the user image (cat.jpeg or uploaded image)
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function drawText(yPosition) {
-        const textColor = (currentLogoUrl === 'logo.png') ? getComputedStyle(document.getElementById('picnic')).backgroundColor : getComputedStyle(document.getElementById('morning')).backgroundColor;
+        const textColor = (currentLogoUrl === '../logo.png') ? getComputedStyle(document.getElementById('picnic')).backgroundColor : getComputedStyle(document.getElementById('morning')).backgroundColor;
         ctx.fillStyle = textColor;
-        ctx.font = '65px Graphik';
+        ctx.font = '105px Graphik';
         ctx.textAlign = 'center';
         const maxWidth = 1450;
         ctx.letterSpacing = '-1.1%';
@@ -98,9 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateImageHeight(textLength) {
-        if (textLength <= 44) {
+        if (textLength <= 56) {
             return 1040;
-        } else if (textLength <= 89) {
+        } else if (textLength <= 85) {
             return 950;
         } else {
             return 900;
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userImgWidth = document.getElementById('widthSlider').value;
         const userImgHeight = calculateImageHeight(currentText.length); // Use calculateImageHeight to get image height
         const userImgX = (canvas.width - userImgWidth) / 2;
-        const userImgY = 375;
+        const userImgY = 480;
     
         ctx.save();
         ctx.beginPath();
@@ -174,33 +174,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function calculateBottomMargin(textLength) {
-        if (textLength <= 44) {
-            return 170;
-        } else if (textLength <= 89) {
-            return 165;
+        if (textLength <= 56) {
+            return 318;
+        } else if (textLength <= 85) {
+            return 284;
         } else {
-            return 155;
-        }
-    }
-
-    function calculateTextHeight(textLength) {
-        const lines = Math.ceil(textLength / 44);
-        if (lines === 1) {
-            return 65 * 1.3;
-        } else if (lines === 2) {
-            return 65 * 1.4 * 2;
-        } else {
-            return 65 * 1.3 * 3;
+            return 246;
         }
     }
 
     function calculateLineHeight(textLength) {
-        if (textLength <= 44) {
-            return 65 * 1.3;
-        } else if (textLength <= 89) {
-            return 65 * 1.4;
+        if (textLength <= 56) {
+            return 105 * 1.3;
+        } else if (textLength <= 85) {
+            return 105 * 1.4;
         } else {
-            return 65 * 1.3;
+            return 105 * 1.3;
         }
     }
 
@@ -210,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         square.addEventListener('click', () => {
             currentBackgroundColor = getComputedStyle(square).backgroundColor;
             const id = square.id;
-            currentLogoUrl = (id === 'picnic' || id === 'purple') ? 'logo2.png' : 'logo.png';
+            currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
             drawCanvas();
         });
     });
