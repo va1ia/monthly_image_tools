@@ -10,10 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let userImgLoaded = false;
     let currentText = 'tag text here...';
 
-    // Canvas logo display
     const logoPositions = {
-        logo1: { x: 730, y: 185, width: 344.4, height: 107.5 },
-        logo2: { x: 730, y: 185, width: 344.4, height: 107.5 }
+        logo1: { x: 649.6, y: 130, width: 495.1, height: 106.7 },
+        logo2: { x: 649.6, y: 130, width: 495.1, height: 106.7 }
     };
 
     let currentBackgroundColor = getComputedStyle(squares[0]).backgroundColor;
