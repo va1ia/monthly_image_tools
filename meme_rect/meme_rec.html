@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <a href="../index.html" class="button" style="padding: 8px 14px; border-radius: 50%; font-size: 20px; position: absolute; top: 20px; left: 24px;"></a>
+    <a href="../index.html" class="button" style="padding: 8px 14px; border-radius: 50%; font-size: 20px; position: absolute; top: 20px; left: 24px;"><</a>
     <div id="bggrid"></div>
     <div class="operation">
         <div class="squares2">
@@ -63,37 +63,51 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const squares = document.querySelectorAll('.square2');
+    let currentLogoUrl = '../logo.png'; // Default logo URL
 
+    // 默认选中第一个square（blush）
+    function setDefaultSelection() {
+        if (squares.length > 0) {
+            const firstSquare = squares[0]; // 这是#blush
+            
+            // 添加selected类
+            firstSquare.classList.add('selected');
+            
+            // 添加logo
+            const id = firstSquare.id;
+            currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
+            
+            const logo = document.createElement('img');
+            logo.src = currentLogoUrl;
+            logo.alt = 'logo';
+            logo.style.width = '50%';
+            logo.style.height = 'auto';
+            logo.style.position = 'absolute';
+            logo.style.top = '50%';
+            logo.style.left = '50%';
+            logo.style.transform = 'translate(-50%, -50%)';
+            firstSquare.appendChild(logo);
+        }
+    }
+
+    // 处理点击事件
     squares.forEach(square => {
         square.addEventListener('click', () => {
-            // 移除所有 square 的 selected 类
+            // 移除所有square的selected类和logo
             squares.forEach(s => {
                 s.classList.remove('selected');
                 s.style.boxShadow = '';
+                s.innerHTML = ''; // 清除logo
             });
 
-            // 为点击的 square 添加 selected 类
+            // 为点击的square添加selected类
             square.classList.add('selected');
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const squares = document.querySelectorAll('.square2');
-    let currentLogoUrl = '../logo.png'; // Default logo URL
-
-    squares.forEach(square => {
-        square.addEventListener('click', () => {
-            // Remove logo from all square divs
-            squares.forEach(s => {
-                s.innerHTML = '';
-            });
-
-            // Determine logo URL based on square id
+            
+            // 确定logo URL
             const id = square.id;
             currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
 
-            // Add logo image to the clicked square div
+            // 添加logo到被点击的square
             const logo = document.createElement('img');
             logo.src = currentLogoUrl;
             logo.alt = 'logo';
@@ -106,8 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
             square.appendChild(logo);
         });
     });
-});
 
+    // 页面加载完成后设置默认选中
+    setDefaultSelection();
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const slider = document.getElementById('widthSlider');
@@ -132,9 +148,21 @@ function updateButtonContent() {
         uploadButton.innerHTML = ''; // Remove text content
         uploadButton.style.backgroundColor = 'transparent'; // Remove background color
         uploadButton.style.border = 'none'; // Remove border
-        uploadButton.style.width = '32px'; // Set width to 32px
-        uploadButton.style.height = '32px'; // Set height to 32px
-        uploadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0ZM93.66,77.66,120,51.31V144a8,8,0,0,0,16,0V51.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,77.66Z"></path></svg>\')'; // Set background image
+        // Check if screen width is 520px or below for smaller size
+        if (window.innerWidth <= 520) {
+            uploadButton.style.width = '20px';
+            uploadButton.style.height = '20px';
+        } else {
+            uploadButton.style.width = '32px';
+            uploadButton.style.height = '32px';
+        }
+
+        if (window.innerWidth <= 520) {
+            uploadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0ZM93.66,77.66,120,51.31V144a8,8,0,0,0,16,0V51.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,77.66Z"></path></svg>\')';
+        } else {
+            uploadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0ZM93.66,77.66,120,51.31V144a8,8,0,0,0,16,0V51.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,77.66Z"></path></svg>\')';
+        }
+
     } else {
         // Restore default button content and styles if screen size is larger than 700px
         uploadButton.innerHTML = 'Upload';
@@ -159,9 +187,21 @@ function updateDownloadButton() {
         downloadButton.innerHTML = ''; // Remove text content
         downloadButton.style.backgroundColor = 'transparent'; // Remove background color
         downloadButton.style.border = 'none'; // Remove border
-        downloadButton.style.width = '32px'; // Set width to 32px
-        downloadButton.style.height = '32px'; // Set height to 32px
-        downloadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path></svg>\')'; // Set background image
+        // Check if screen width is 520px or below for smaller size
+        if (window.innerWidth <= 520) {
+            downloadButton.style.width = '20px';
+            downloadButton.style.height = '20px';
+        } else {
+            downloadButton.style.width = '32px';
+            downloadButton.style.height = '32px';
+        }
+
+        if (window.innerWidth <= 520) {
+            downloadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path></svg>\')';
+        } else {
+            downloadButton.style.backgroundImage = 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="%23282828" viewBox="0 0 256 256"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"></path></svg>\')';
+        }
+
     } else {
         // Restore default button content and styles if screen size is larger than 700px
         downloadButton.innerHTML = 'Download';

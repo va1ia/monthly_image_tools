@@ -31,11 +31,11 @@ document.getElementById('download').addEventListener('click', () => {
 });
 
 // Handle text input
-document.getElementById('userText').addEventListener('input', (e) => {
-    const text = e.target.value;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillText(text, 10, canvas.height - 10);
-});
+// document.getElementById('userText').addEventListener('input', (e) => {
+//     const text = e.target.value;
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     ctx.fillText(text, 10, canvas.height - 10);
+// });
 
 // Handle slider input
 document.getElementById('widthSlider').addEventListener('input', (e) => {

@@ -1,237 +1,353 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // DOM elements
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const squares = document.querySelectorAll('.square2');
-
-    // Custom defines
-    let img = new Image();
-    let secondImg = new Image();
-    secondImg.src = '../meme.png';
-    let currentText = 'type your text here... minimum 2 lines plz';
-    let userImg = new Image();
-    let userImgLoaded = false;
-
-    const logoPositions = {
-        logo1: { x: 649.6, y: 130, width: 495.1, height: 106.7 },
-        logo2: { x: 649.6, y: 130, width: 495.1, height: 106.7 }
-    };
-
-    let currentBackgroundColor = getComputedStyle(squares[0]).backgroundColor;
-    let currentLogoUrl = '../logo.png';
-
-    function drawCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Set background color
-        ctx.fillStyle = currentBackgroundColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the logo image
-        img.src = currentLogoUrl;
-        img.onload = () => {
-            const pos = (currentLogoUrl === '../logo.png') ? logoPositions.logo1 : logoPositions.logo2;
-            ctx.drawImage(img, pos.x, pos.y, pos.width, pos.height);
-
-            // Draw the user image (cat.jpeg or uploaded image)
-            if (userImgLoaded) {
-                drawUserImage();
-            } else {
-                drawPlaceholderImage();
-            }
-        };
-    }
-
-    // Text input and character count
     const userText = document.getElementById('userText');
     const charCount = document.getElementById('charCount');
+    const widthSlider = document.getElementById('widthSlider');
+    const uploadBtn = document.getElementById('upload');
+    const downloadBtn = document.getElementById('download');
 
-    userText.addEventListener('input', function() {
-        const text = userText.value;
-        const count = text.length;
-        charCount.textContent = `Characters: ${count}`;
+    // Application state
+    const state = {
+        currentText: 'type your text here... minimum 2 lines plz',
+        currentBackgroundColor: getComputedStyle(squares[0]).backgroundColor,
+        currentLogoUrl: '../logo.png',
+        userImgLoaded: false
+    };
 
-        // Automatically resize the text input box
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
+    // Image objects
+    const images = {
+        logo: new Image(),
+        placeholder: new Image(),
+        userImage: new Image()
+    };
+    
+    images.placeholder.src = '../meme.png';
 
-        // Update current text and redraw canvas
-        currentText = text;
-        drawCanvas();
-    });
+    // Configuration constants
+    const CONFIG = {
+        logoPositions: {
+            logo1: { x: 667.1, y: 190, width: 464.2, height: 100 },
+            logo2: { x: 667.1, y: 190, width: 464.2, height: 100 }
+        },
+        text: {
+            font: '105px Graphik',
+            maxWidth: 1450,
+            letterSpacing: '-1.1%'
+        },
+        image: {
+            borderRadius: 80,
+            defaultY: 480,
+            userImageY: 480
+        }
+    };
 
-    function drawText(yPosition) {
-        const textColor = (currentLogoUrl === '../logo.png') ? getComputedStyle(document.getElementById('picnic')).backgroundColor : getComputedStyle(document.getElementById('morning')).backgroundColor;
-        ctx.fillStyle = textColor;
-        ctx.font = '105px Graphik';
-        ctx.textAlign = 'center';
-        const maxWidth = 1450;
-        ctx.letterSpacing = '-1.1%';
-        const lines = getLines(ctx, currentText, maxWidth);
-        const lineHeight = calculateLineHeight(currentText.length);
-        const x = canvas.width / 2;
+    // Utility functions
+    const utils = {
+        getTextLines(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            if (words.length === 0) return [''];
+            
+            const lines = [];
+            let currentLine = words[0];
 
-        yPosition = canvas.height - calculateBottomMargin(currentText.length) - (lines.length - 1) * lineHeight;
-
-        lines.forEach((line, index) => {
-            ctx.fillText(line, x, yPosition + (index * lineHeight));
-        });
-    }
-
-    function getLines(ctx, text, maxWidth) {
-        const words = text.split(' ');
-        const lines = [];
-        let currentLine = words[0];
-
-        for (let i = 1; i < words.length; i++) {
-            const word = words[i];
-            const width = ctx.measureText(currentLine + ' ' + word).width;
-            if (width < maxWidth) {
-                currentLine += ' ' + word;
-            } else {
-                lines.push(currentLine);
-                currentLine = word;
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const testLine = currentLine + ' ' + word;
+                const width = ctx.measureText(testLine).width;
+                
+                if (width < maxWidth) {
+                    currentLine = testLine;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
             }
-        }
-        lines.push(currentLine);
-        return lines;
-    }
+            lines.push(currentLine);
+            return lines;
+        },
 
-    function calculateImageHeight(textLength) {
-        if (textLength <= 56) {
-            return 1040;
-        } else if (textLength <= 85) {
-            return 950;
-        } else {
-            return 900;
-        }
-    }
+        getImageHeight(lineCount) {
+            const heights = {
+                1: 1080,
+                2: 1040,
+                3: 950
+            };
+            return heights[lineCount] || 900; // 4+ lines
+        },
 
-    function drawPlaceholderImage() {
-        const userImgWidth = document.getElementById('widthSlider').value;
-        const userImgHeight = calculateImageHeight(currentText.length); // Use calculateImageHeight to get image height
-        const userImgX = (canvas.width - userImgWidth) / 2;
-        const userImgY = 480;
-    
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(userImgX, userImgY, userImgWidth, userImgHeight, [80]);
-        ctx.clip();
-    
-        // Ensure image is loaded before drawing
-        if (secondImg.complete && secondImg.naturalHeight !== 0) {
-            const aspectRatio = secondImg.naturalWidth / secondImg.naturalHeight;
-            let drawHeight = userImgHeight;
-            let drawWidth = drawHeight * aspectRatio; // Adjust width proportionally
-    
-            // Only scale up if the width is less than the crop width
-            if (drawWidth < userImgWidth) {
-                drawWidth = userImgWidth;
-                drawHeight = drawWidth / aspectRatio; // Recalculate height
+        getTopPosition(lineCount) {
+            const positions = {
+                1: 1978,
+                2: 1910,
+                3: 1795
+            };
+            return positions[lineCount] || 1710; // 4+ lines
+        },
+
+        getLineHeight(lineCount) {
+            const baseHeight = 105;
+            const multipliers = {
+                1: 1.3,
+                2: 1.3,
+                3: 1.4
+            };
+            return baseHeight * (multipliers[lineCount] || 1.3); // 4+ lines
+        },
+
+        getTextColor() {
+            const colorElement = state.currentLogoUrl === '../logo.png' ? 
+                document.getElementById('picnic') : 
+                document.getElementById('morning');
+            return getComputedStyle(colorElement).backgroundColor;
+        },
+
+        debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    };
+
+    // Drawing functions
+    const draw = {
+        canvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Set font first for accurate text measurement
+            ctx.font = CONFIG.text.font;
+            
+            // Draw background
+            ctx.fillStyle = state.currentBackgroundColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw logo
+            this.logo();
+        },
+
+        logo() {
+            images.logo.src = state.currentLogoUrl;
+            
+            const drawContent = () => {
+                const pos = state.currentLogoUrl === '../logo.png' ? 
+                    CONFIG.logoPositions.logo1 : 
+                    CONFIG.logoPositions.logo2;
+                
+                ctx.drawImage(images.logo, pos.x, pos.y, pos.width, pos.height);
+                
+                // Draw image after logo is loaded
+                if (state.userImgLoaded) {
+                    this.userImage();
+                } else {
+                    this.placeholderImage();
+                }
+            };
+            
+            images.logo.onload = drawContent;
+            
+            // If image is already loaded, draw immediately
+            if (images.logo.complete && images.logo.naturalHeight !== 0) {
+                drawContent();
             }
-    
-            const drawX = userImgX + (userImgWidth - drawWidth) / 2; // Center draw
-            const drawY = userImgY + (userImgHeight - drawHeight) / 2; // Center draw
-    
-            ctx.drawImage(secondImg, drawX, drawY, drawWidth, drawHeight);
-        }
-    
-        ctx.restore();
-        drawText(userImgY + userImgHeight); // Draw text
-    }
-    
-    function drawUserImage() {
-        const userImgWidth = document.getElementById('widthSlider').value;
-        const userImgHeight = calculateImageHeight(currentText.length); // Use calculateImageHeight to get image height
-        const userImgX = (canvas.width - userImgWidth) / 2;
-        const userImgY = 375;
-    
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(userImgX, userImgY, userImgWidth, userImgHeight, [80]);
-        ctx.clip();
-    
-        // Ensure image is loaded before drawing
-        if (userImgLoaded) {
-            const aspectRatio = userImg.naturalWidth / userImg.naturalHeight;
-            let drawHeight = userImgHeight;
-            let drawWidth = drawHeight * aspectRatio; // Adjust width proportionally
-    
-            // Only scale up if the width is less than the crop width
-            if (drawWidth < userImgWidth) {
-                drawWidth = userImgWidth;
-                drawHeight = drawWidth / aspectRatio; // Recalculate height
+        },
+
+        text(yPosition) {
+            const lines = utils.getTextLines(ctx, state.currentText, CONFIG.text.maxWidth);
+            const lineCount = lines.length;
+            const lineHeight = utils.getLineHeight(lineCount);
+            
+            ctx.fillStyle = utils.getTextColor();
+            ctx.font = CONFIG.text.font;
+            ctx.textAlign = 'center';
+            ctx.letterSpacing = CONFIG.text.letterSpacing;
+            
+            const x = canvas.width / 2;
+            const startY = utils.getTopPosition(lineCount);
+            
+            lines.forEach((line, index) => {
+                ctx.fillText(line, x, startY + (index * lineHeight));
+            });
+        },
+
+        imageWithClipping(img, x, y, width, height) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, [CONFIG.image.borderRadius]);
+            ctx.clip();
+            
+            if (img.complete && img.naturalHeight !== 0) {
+                const aspectRatio = img.naturalWidth / img.naturalHeight;
+                let drawHeight = height;
+                let drawWidth = drawHeight * aspectRatio;
+                
+                // Scale up if width is less than crop width
+                if (drawWidth < width) {
+                    drawWidth = width;
+                    drawHeight = drawWidth / aspectRatio;
+                }
+                
+                const drawX = x + (width - drawWidth) / 2;
+                const drawY = y + (height - drawHeight) / 2;
+                
+                ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
             }
-    
-            const drawX = userImgX + (userImgWidth - drawWidth) / 2; // Center draw
-            const drawY = userImgY + (userImgHeight - drawHeight) / 2; // Center draw
-    
-            ctx.drawImage(userImg, drawX, drawY, drawWidth, drawHeight);
-        }
-    
-        ctx.restore();
-        drawText(userImgY + userImgHeight); // Draw text
-    }
-    
-    function calculateBottomMargin(textLength) {
-        if (textLength <= 56) {
-            return 318;
-        } else if (textLength <= 85) {
-            return 284;
-        } else {
-            return 246;
-        }
-    }
+            
+            ctx.restore();
+        },
 
-    function calculateLineHeight(textLength) {
-        if (textLength <= 56) {
-            return 105 * 1.3;
-        } else if (textLength <= 85) {
-            return 105 * 1.4;
-        } else {
-            return 105 * 1.3;
-        }
-    }
+        placeholderImage() {
+            const lines = utils.getTextLines(ctx, state.currentText, CONFIG.text.maxWidth);
+            const lineCount = lines.length;
+            const imageWidth = parseInt(widthSlider.value);
+            const imageHeight = utils.getImageHeight(lineCount);
+            const imageX = (canvas.width - imageWidth) / 2;
+            const imageY = CONFIG.image.defaultY;
+            
+            this.imageWithClipping(images.placeholder, imageX, imageY, imageWidth, imageHeight);
+            this.text();
+        },
 
-    drawCanvas();
+        userImage() {
+            const lines = utils.getTextLines(ctx, state.currentText, CONFIG.text.maxWidth);
+            const lineCount = lines.length;
+            const imageWidth = parseInt(widthSlider.value);
+            const imageHeight = utils.getImageHeight(lineCount);
+            const imageX = (canvas.width - imageWidth) / 2;
+            const imageY = CONFIG.image.userImageY;
+            
+            this.imageWithClipping(images.userImage, imageX, imageY, imageWidth, imageHeight);
+            this.text();
+        }
+    };
+
+    // Event handlers
+    const handlers = {
+        textInput() {
+            const text = userText.value;
+            const count = text.length;
+            
+            // Update character count
+            charCount.textContent = `Characters: ${count}`;
+            
+            // Auto-resize textarea
+            userText.style.height = 'auto';
+            userText.style.height = userText.scrollHeight + 'px';
+            
+            // Update state and redraw
+            state.currentText = text || 'type your text here... minimum 2 lines plz';
+            draw.canvas();
+        },
+
+        colorSelect(square) {
+            // Update state
+            state.currentBackgroundColor = getComputedStyle(square).backgroundColor;
+            const id = square.id;
+            state.currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
+            
+            // Update UI
+            squares.forEach(s => {
+                s.classList.remove('selected');
+                s.innerHTML = '';
+            });
+            
+            square.classList.add('selected');
+            this.addLogoToSquare(square);
+            
+            // Redraw canvas
+            draw.canvas();
+        },
+
+        addLogoToSquare(square) {
+            const logo = document.createElement('img');
+            logo.src = state.currentLogoUrl;
+            logo.alt = 'logo';
+            Object.assign(logo.style, {
+                width: '50%',
+                height: 'auto',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+            });
+            square.appendChild(logo);
+        },
+
+        uploadImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    images.userImage.onload = () => {
+                        state.userImgLoaded = true;
+                        widthSlider.value = Math.min(images.userImage.width, parseInt(widthSlider.max));
+                        draw.canvas();
+                    };
+                    images.userImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            };
+            
+            input.click();
+        },
+
+        downloadCanvas() {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'my-monthly-meme.png';
+            link.click();
+        },
+
+        sliderChange: utils.debounce(() => {
+            draw.canvas();
+        }, 100)
+    };
+
+    // Initialize default selection by simulating click on first square
+    const initializeDefaults = () => {
+        // Set initial slider value
+        widthSlider.value = widthSlider.max;
+        
+        // Set initial font for text measurement
+        ctx.font = CONFIG.text.font;
+        
+        // Simulate clicking the first square (pink/blush)
+        if (squares.length > 0) {
+            const firstSquare = squares[0]; // This is the pink/blush square
+            handlers.colorSelect(firstSquare); // Trigger the same logic as clicking
+        }
+    };
+
+    // Event listeners
+    userText.addEventListener('input', handlers.textInput);
+    widthSlider.addEventListener('input', handlers.sliderChange);
+    uploadBtn.addEventListener('click', handlers.uploadImage);
+    downloadBtn.addEventListener('click', handlers.downloadCanvas);
 
     squares.forEach(square => {
-        square.addEventListener('click', () => {
-            currentBackgroundColor = getComputedStyle(square).backgroundColor;
-            const id = square.id;
-            currentLogoUrl = (id === 'picnic' || id === 'purple') ? '../logo2.png' : '../logo.png';
-            drawCanvas();
-        });
+        square.addEventListener('click', () => handlers.colorSelect(square));
     });
 
-    document.getElementById('upload').addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                userImg = new Image();
-                userImg.onload = () => {
-                    userImgLoaded = true;
-                    document.getElementById('widthSlider').value = userImg.width; // Set slider to image width
-                    drawCanvas();
-                };
-                userImg.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-        input.click();
-    });
+    // Initialize application
+    initializeDefaults();
 
-    document.getElementById('download').addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL();
-        link.download = 'canvas.png';
-        link.click();
-    });
-
-    document.getElementById('widthSlider').addEventListener('input', () => {
-        drawCanvas();
-    });
+    // Expose some functions globally if needed (for debugging)
+    window.memeGenerator = {
+        state,
+        draw,
+        utils
+    };
 });
