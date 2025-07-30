@@ -1,21 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM elements
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const squares = document.querySelectorAll('.square2');
-    const userText = document.getElementById('userText');
-    const charCount = document.getElementById('charCount');
-    const widthSlider = document.getElementById('widthSlider');
-    const uploadBtn = document.getElementById('upload');
-    const downloadBtn = document.getElementById('download');
+    // 强制加载字体
+    const fontLoader = new FontFace('Graphik', 'url(../graphik.woff)');
+    const fontLoaderLight = new FontFace('Graphik', 'url(../graphik-light.woff)', { weight: '200' });
 
-    // Application state
-    const state = {
-        currentText: 'type your text here... minimum 2 lines plz',
-        currentBackgroundColor: getComputedStyle(squares[0]).backgroundColor,
-        currentLogoUrl: '../logo.png',
-        userImgLoaded: false
-    };
+    Promise.all([
+        fontLoader.load(),
+        fontLoaderLight.load()
+    ]).then((fonts) => {
+        fonts.forEach(font => document.fonts.add(font));
+        // 字体加载完成后再初始化
+        initializeApplication();
+    }).catch(() => {
+        // 如果字体加载失败，仍然初始化应用
+        console.warn('Font loading failed, using fallback');
+        initializeApplication();
+    });
+
+    // 将原来的初始化代码包装成函数
+    function initializeApplication() {
+        // DOM elements
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const squares = document.querySelectorAll('.square2');
+        const userText = document.getElementById('userText');
+        const charCount = document.getElementById('charCount');
+        const widthSlider = document.getElementById('widthSlider');
+        const uploadBtn = document.getElementById('upload');
+        const downloadBtn = document.getElementById('download');
+
+        // Application state
+        const state = {
+            currentText: 'type your text here... minimum 2 lines plz',
+            currentBackgroundColor: getComputedStyle(squares[0]).backgroundColor,
+            currentLogoUrl: '../logo.png',
+            userImgLoaded: false
+        };
 
     // Image objects
     const images = {
@@ -350,4 +369,5 @@ document.addEventListener('DOMContentLoaded', () => {
         draw,
         utils
     };
+};
 });
