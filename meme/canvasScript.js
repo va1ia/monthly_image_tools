@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             getTopMargin(lineCount) {
                 const margins = {
                     1: 1630,
-                    2: 1555,
+                    2: 1545,
                     3: 1470
                 };
                 return margins[lineCount] || 1390; // 4+ lines
