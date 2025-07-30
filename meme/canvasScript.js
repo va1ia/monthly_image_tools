@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Configuration constants (使用原文件的数据)
         const CONFIG = {
             logoPositions: {
-                logo1: { x: 649.6, y: 130, width: 495.1, height: 106.7 },
-                logo2: { x: 649.6, y: 130, width: 495.1, height: 106.7 }
+                logo1: { x: 649.6, y: 130, width: 464.2, height: 100 },
+                logo2: { x: 649.6, y: 130, width: 464.2, height: 100 }
             },
             text: {
                 font: '65px Graphik',

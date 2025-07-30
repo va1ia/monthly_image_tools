@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentText = 'tag text here...';
 
     const logoPositions = {
-        logo1: { x: 649.6, y: 130, width: 495.1, height: 106.7 },
-        logo2: { x: 649.6, y: 130, width: 495.1, height: 106.7 }
+        logo1: { x: 649.6, y: 180, width: 464.2, height: 100 },
+        logo2: { x: 649.6, y: 180, width: 464.2, height: 100 }
     };
 
     let currentBackgroundColor = getComputedStyle(squares[0]).backgroundColor;
@@ -144,19 +144,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const yPosition = showFrame ? 1590 : 1590 + yOffset;
         const xPosition = canvas.width / 2;
     
-        ctx.font = '38px Graphik';
+        ctx.font = '60px Graphik';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
     
         const textWidth = ctx.measureText(currentText).width;
-        const totalWidth = textWidth + 60;
+        const totalWidth = textWidth + 100;
     
         // Draw the rounded rectangle frame first
         ctx.save(); // Save the current context state
         ctx.beginPath();
-        ctx.roundRect(xPosition - totalWidth / 2, yPosition - 38 / 2 - 8, totalWidth, 38 + 16, 20); // Use roundRect for rounded corners
+        ctx.roundRect(xPosition - totalWidth / 2, yPosition - 38 / 2 - 24, totalWidth, 38 + 48, 43); // Use roundRect for rounded corners
         ctx.strokeStyle = currentTextColor;
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 6;
         ctx.stroke();
         ctx.restore(); // Restore the context state to remove the frame from the clipping path
     
